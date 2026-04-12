@@ -24,11 +24,10 @@ function normalize_numerical_columns!(df)
     # Get names of all numeric columns in the DataFrame
     num_cols = names(df, Real)
     for col in num_cols
-        # TODO: Implement min-max scaling formula
-        # Broadcast(/, max-min, Broadcast(-, min, col))
+        # Implement min-max scaling formula
         max = maximum(df[!, col])
         min = minimum(df[!, col])
-        df[!, col] = broadcast(-, min, df[!, col])
+        df[!, col] = broadcast(/, broadcast(-, df[!, col], min), max-min)
         # Formula: (x - min(x)) / (max(x) - min(x))
     end
 end
@@ -101,10 +100,11 @@ function main()
     df = load_and_preprocess_data("sp_500_stock_price.csv")
     #println(first(df, 5))
     #println(names(df))
-    #println(describe(df))
+    println(describe(df))
 
     # Normalize all numerical columns
     normalize_numerical_columns!(df)
+    println(describe(df))
     # Process and add time-based features
     #process_time_features!(df)
     
