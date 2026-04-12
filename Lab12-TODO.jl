@@ -37,8 +37,10 @@ Task 3: Create time-based features and filter data
 function process_time_features!(df)
     # TODO: Add time-based columns (Year, Month, Quarter)
     # Extract year, month, and quarter from the Date column
-    year = parse(UInt16, year(df[!, Date]))
-    month = parse(UInt16, month(df[!, Date]))
+    df.Year = copy(df.Date)
+    Date.(df.Year, Dates.DateFormat("yyyy"))
+    #Dates.format(df[!, :Date], "e: yyyy")
+    month = parse(UInt16, Dates.month(df[!, :Date]))
     month_quarters = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
     quarter = month_quarters[month-1]
     # Filter DataFrame to keep only rows between 2014-2022
@@ -108,7 +110,8 @@ function main()
     normalize_numerical_columns!(df)
     println(describe(df))
     # Process and add time-based features
-    #process_time_features!(df)
+    process_time_features!(df)
+    println(describe(df))
     
     # Calculate various statistical measures
     #yearly_stats, monthly_stats, quarterly_stats = calculate_statistics(df)
