@@ -37,12 +37,10 @@ Task 3: Create time-based features and filter data
 function process_time_features!(df)
     # TODO: Add time-based columns (Year, Month, Quarter)
     # Extract year, month, and quarter from the Date column
-    df.Year = copy(df.Date)
-    Date.(df.Year, Dates.DateFormat("yyyy"))
-    #Dates.format(df[!, :Date], "e: yyyy")
-    month = parse(UInt16, Dates.month(df[!, :Date]))
+    df.Year = year.(df.Date)
+    df.Month = month.(df.Date)
     month_quarters = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
-    quarter = month_quarters[month-1]
+    df.Quarter = month_quarters[df.Month-1]
     # Filter DataFrame to keep only rows between 2014-2022
     filter!(row -> 2014 <= year(row.Date) <= 2022, df)
 end
