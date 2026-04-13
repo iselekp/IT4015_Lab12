@@ -39,8 +39,8 @@ function process_time_features!(df)
     # Extract year, month, and quarter from the Date column
     df.Year = year.(df.Date)
     df.Month = month.(df.Date)
-    month_quarters = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
-    df.Quarter = month_quarters[df.Month-1]
+    month_quarters = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4]
+    df.Quarter = month_quarters[df.Month]
     # Filter DataFrame to keep only rows between 2014-2022
     filter!(row -> 2014 <= year(row.Date) <= 2022, df)
 end
@@ -110,6 +110,7 @@ function main()
     # Process and add time-based features
     process_time_features!(df)
     println(describe(df))
+    println(first(df, 5))
     
     # Calculate various statistical measures
     #yearly_stats, monthly_stats, quarterly_stats = calculate_statistics(df)
