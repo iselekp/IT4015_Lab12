@@ -63,10 +63,10 @@ end
 Task 5A: Create 1D visualizations
 """
 function create_visualizations(df)
-    # TODO: Create three different types of plots for data visualization
-    p1 = # Create boxplot here
-    p2 = # Create histogram here
-    p3 = # Create scatter plot here
+    # Create three different types of plots for data visualization
+    p1 = boxplot(df[!, "SP500"])# Create boxplot here
+    p2 = histogram(df[!, "Consumer Price Index"])# Create histogram here
+    p3 = scatter(df[!, "Date"], df[!, "PE10"])# Create scatter plot here
     
     # Combine all three plots into a single figure
     combined_plot = plot(p1, p2, p3, layout=(1,3), size=(1200,400))
@@ -116,7 +116,7 @@ function main()
     println(monthly_stats)
     println(quarterly_stats)
     # Create visualization plots
-    #create_visualizations(df)
+    create_visualizations(df)
     
     # Remove time-based columns to avoid redundancy in time series plots
     #select!(df, Not([:Year, :Month, :Quarter]))
