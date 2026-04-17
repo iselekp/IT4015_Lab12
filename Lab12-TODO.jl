@@ -49,9 +49,9 @@ end
 Task 4: Calculate aggregated statistics
 """
 function calculate_statistics(df)
-    # TODO: Calculate yearly aggregated statistics using combine and groupby operations
-    yearly_stats = # Your code here
-    
+    # Calculate yearly aggregated statistics using combine and groupby operations
+    # Calculate sum of dividends by year
+    yearly_stats = combine(groupby(df, :Year), :Dividend => sum)
     # Calculate sum of dividends by month
     monthly_stats = combine(groupby(df, :Month), :Dividend => sum)
     # Calculate sum of dividends by quarter
@@ -102,18 +102,19 @@ function main()
     df = load_and_preprocess_data("sp_500_stock_price.csv")
     #println(first(df, 5))
     #println(names(df))
-    println(describe(df))
+    #println(describe(df))
 
     # Normalize all numerical columns
     normalize_numerical_columns!(df)
-    println(describe(df))
+    #println(describe(df))
     # Process and add time-based features
     process_time_features!(df)
-    println(describe(df))
-    println(first(df, 5))
-    
+
     # Calculate various statistical measures
-    #yearly_stats, monthly_stats, quarterly_stats = calculate_statistics(df)
+    yearly_stats, monthly_stats, quarterly_stats = calculate_statistics(df)
+    println(yearly_stats)
+    println(monthly_stats)
+    println(quarterly_stats)
     # Create visualization plots
     #create_visualizations(df)
     
