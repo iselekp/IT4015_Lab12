@@ -9,9 +9,10 @@ function load_and_preprocess_data(filepath)
     df = DataFrame(CSV.read(filepath, DataFrame))
     
     # Transform numeric columns to 2 significant digits
-    numeric_columns = #TODO: Define the list of numeric columns
-    # TODO: Only keep two decimal digits for each numeric column
-    
+    numeric_columns = ["SP500", "Dividend", "Earnings", "Consumer Price Index", "Long Interest Rate", "Real Price", "Real Dividend", "Real Earnings", "PE10"]
+    for col in numeric_columns
+        df[!, col] = round.(df[:, col], digits=2)# Only keep two decimal digits for each numeric column
+    end
     return df
 end
 
@@ -22,7 +23,10 @@ function normalize_numerical_columns!(df)
     # Get names of all numeric columns in the DataFrame
     num_cols = names(df, Real)
     for col in num_cols
-        # TODO: Implement min-max scaling formula
+        # Implement min-max scaling formula
+        max = maximum(df[!, col])
+        min = minimum(df[!, col])
+        df[!, col] = broadcast(/, broadcast(-, df[!, col], min), max-min)
         # Formula: (x - min(x)) / (max(x) - min(x))
     end
 end
@@ -33,7 +37,10 @@ Task 3: Create time-based features and filter data
 function process_time_features!(df)
     # TODO: Add time-based columns (Year, Month, Quarter)
     # Extract year, month, and quarter from the Date column
-    
+    df.Year = year.(df.Date)
+    df.Month = month.(df.Date)
+    month_quarters = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4]
+    df.Quarter = month_quarters[df.Month]
     # Filter DataFrame to keep only rows between 2014-2022
     filter!(row -> 2014 <= year(row.Date) <= 2022, df)
 end
@@ -42,9 +49,9 @@ end
 Task 4: Calculate aggregated statistics
 """
 function calculate_statistics(df)
-    # TODO: Calculate yearly aggregated statistics using combine and groupby operations
-    yearly_stats = # Your code here
-    
+    # Calculate yearly aggregated statistics using combine and groupby operations
+    # Calculate sum of dividends by year
+    yearly_stats = combine(groupby(df, :Year), :Dividend => sum)
     # Calculate sum of dividends by month
     monthly_stats = combine(groupby(df, :Month), :Dividend => sum)
     # Calculate sum of dividends by quarter
@@ -56,10 +63,10 @@ end
 Task 5A: Create 1D visualizations
 """
 function create_visualizations(df)
-    # TODO: Create three different types of plots for data visualization
-    p1 = # Create boxplot here
-    p2 = # Create histogram here
-    p3 = # Create scatter plot here
+    # Create three different types of plots for data visualization
+    p1 = boxplot(df[!, "SP500"])# Create boxplot here
+    p2 = histogram(df[!, "Consumer Price Index"])# Create histogram here
+    p3 = scatter(df[!, "Date"], df[!, "PE10"])# Create scatter plot here
     
     # Combine all three plots into a single figure
     combined_plot = plot(p1, p2, p3, layout=(1,3), size=(1200,400))
@@ -81,7 +88,10 @@ function create_time_series_plots(df, n)
     # Sort dates in reverse order and take first n entries
     sorted_dates = sort(df[1:n, :Date], rev=true)
     
-    # TODO: Create time series plots for each numerical column
+    # Create time series plots for each numerical column
+    for col in num_cols
+        push!(plots, scatter(sorted_dates, df[1:n, col]))
+    end
     
     # Combine all plots into a 3x3 grid
     final_plot = plot(plots..., layout=(3,3), size=(4800,4800))
@@ -97,9 +107,13 @@ function main()
     normalize_numerical_columns!(df)
     # Process and add time-based features
     process_time_features!(df)
-    
+    #println(describe(df))
+
     # Calculate various statistical measures
     yearly_stats, monthly_stats, quarterly_stats = calculate_statistics(df)
+    #println(yearly_stats)
+    #println(monthly_stats)
+    #println(quarterly_stats)
     # Create visualization plots
     create_visualizations(df)
     
