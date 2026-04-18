@@ -112,9 +112,9 @@ function main()
 
     # Calculate various statistical measures
     yearly_stats, monthly_stats, quarterly_stats = calculate_statistics(df)
-    #println(yearly_stats)
-    #println(monthly_stats)
-    #println(quarterly_stats)
+    println(yearly_stats)
+    println(monthly_stats)
+    println(quarterly_stats)
     # Create visualization plots
     create_visualizations(df)
     
