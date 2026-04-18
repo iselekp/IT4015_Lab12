@@ -35,7 +35,7 @@ end
 Task 3: Create time-based features and filter data
 """
 function process_time_features!(df)
-    # TODO: Add time-based columns (Year, Month, Quarter)
+    # Add time-based columns (Year, Month, Quarter)
     # Extract year, month, and quarter from the Date column
     df.Year = year.(df.Date)
     df.Month = month.(df.Date)
@@ -64,9 +64,10 @@ Task 5A: Create 1D visualizations
 """
 function create_visualizations(df)
     # Create three different types of plots for data visualization
+    num_cols = names(df, Real)
     p1 = boxplot(df[!, "SP500"])# Create boxplot here
     p2 = histogram(df[!, "Consumer Price Index"])# Create histogram here
-    p3 = scatter(df[!, "Date"], df[!, "PE10"])# Create scatter plot here
+    p3 = scatter(df[!, "Date"], df[!, "PE10"], xlabel="", ylabel="")# Create scatter plot here
     
     # Combine all three plots into a single figure
     combined_plot = plot(p1, p2, p3, layout=(1,3), size=(1200,400))
@@ -89,8 +90,8 @@ function create_time_series_plots(df, n)
     sorted_dates = sort(df[1:n, :Date], rev=true)
     
     # Create time series plots for each numerical column
-    for col in num_cols
-        push!(plots, scatter(sorted_dates, df[1:n, col]))
+    for (col, color) in zip(num_cols, colors)
+        push!(plots, scatter(sorted_dates, df[1:n, col], markercolor=color, markerstrokecolor=color, markersize=12, plot_title=col))
     end
     
     # Combine all plots into a 3x3 grid

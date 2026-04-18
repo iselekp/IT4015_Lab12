@@ -2,7 +2,7 @@ using Test
 using DataFrames, CSV, Plots, Dates, Statistics, StatsBase, StatsPlots, GLM, Chain
 
 # Include the name of your file; e.g. Lab12-TODO.jl at line 5 below. If it is the same filename, just uncomment line 5
-# include("lab12-TODO.jl")
+include("Lab12-iselekp.jl")
 
 @testset "Lab12 Julia ETL and Visualization Tests" begin
     # Setup - load data once for all tests
